@@ -8,7 +8,10 @@ class Level:
         self.setup(tmx_map)
     
     def setup(self, tmx_map):
-        print(tmx_map)
+        for x, y, surf, in tmx_map.get_layer_by_name('Terrain').tiles():
+            print(x)
+            print(y)
+            print(surf)
 
     def run(self):
         self.display_surface.fill('grey')
