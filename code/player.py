@@ -1,6 +1,7 @@
 
 from typing import Any
 from settings import *
+from timer import Timer
 
 class PLayer(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups, collision_sprites):
@@ -17,30 +18,36 @@ class PLayer(pygame.sprite.Sprite):
         self.speed = 150
         self.gravity = 1000
         self.jump = False
-        self.jump_height = -800
+        self.jump_height = 600
     
     # * collisoin
         self.collision_sprites = collision_sprites
         self.on_surface = {'floor': False, 'left': False, 'right': False}
 
-        self.display_surface = pygame.display.get_surface()
+    # * timer
+
+        self.timers = {
+            'wall jump': Timer(400)
+        }
 
 
 
     def input(self):
         keys = pygame.key.get_pressed()
         input_vector = vector(0,0)
-        if keys[pygame.K_d]:
-            input_vector.x += 1
+        if not self.timers['wall jump'].active:
+            if keys[pygame.K_d]:
+                input_vector.x += 1
 
-        if keys[pygame.K_a]:
-            input_vector.x -= 1
-        
-        self.direction.x = input_vector.normalize().x if input_vector else input_vector.x
+            if keys[pygame.K_a]:
+                input_vector.x -= 1
+            
+            self.direction.x = input_vector.normalize().x if input_vector else input_vector.x
 
 
         if keys[pygame.K_SPACE]:
             self.jump = True
+            self.timers['wall jump'].activate()
 
 
 
@@ -54,7 +61,7 @@ class PLayer(pygame.sprite.Sprite):
         # * slide on walls
         if not self.on_surface['floor'] and any((self.on_surface['left'], self.on_surface['right'])):
             self.direction.y = 0
-            self.rect.y += self.gravity / 8 * dt
+            self.rect.y += self.gravity / 10 * dt
 
         else:
             self.direction.y += self.gravity / 2 * dt
@@ -63,11 +70,11 @@ class PLayer(pygame.sprite.Sprite):
 
         if self.jump:
             if self.on_surface['floor']:
-                self.direction.y = self.jump_height
-            if self.on_surface['right']:
-                self.direction.y = self.jump_height
-            if self.on_surface['left']:
-                self.direction.y = self.jump_height
+                self.direction.y = -self.jump_height
+            elif any((self.on_surface['left'], self.on_surface['right'])):
+                self.timers['wall jump'].activate()
+                self.direction.y = -self.jump_height
+                self.direction.x = 1 if self.on_surface['left'] else - 1
             self.jump = False
     
         self.collision('vertical')
@@ -107,8 +114,14 @@ class PLayer(pygame.sprite.Sprite):
                         self.rect.bottom = sprite.rect.top
                     self.direction.y = 0
 
+    def update_timers(self):
+        for timer in self.timers.values():
+            timer.update()
+
     def update(self, dt):
         self.old_rect = self.rect.copy()
+        self.update_timers()
         self.input()
         self.move(dt)
         self.check_contact()
+   
