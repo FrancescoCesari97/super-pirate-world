@@ -15,7 +15,7 @@ class PLayer(pygame.sprite.Sprite):
     
     # * collisoin
         self.collision_sprites = collision_sprites
-        
+
 
 
     def input(self):
@@ -30,7 +30,8 @@ class PLayer(pygame.sprite.Sprite):
         self.direction = input_vector.normalize() if input_vector else input_vector
 
     def move(self, dt):
-        self.rect.topleft += self.direction * self.speed * dt
+        self.rect.x += self.direction.x * self.speed * dt
+        self.rect.y += self.direction.y * self.speed * dt
 
     def update(self, dt):
         self.input()
