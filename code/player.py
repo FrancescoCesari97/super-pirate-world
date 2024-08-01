@@ -7,7 +7,10 @@ class PLayer(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = pygame.Surface((48, 56))
         self.image.fill('red')
+
+    # * rects
         self.rect = self.image.get_frect(topleft = pos)
+        self.old_rect = self.rect.copy
 
     # *movement
         self.direction = vector()
@@ -40,16 +43,17 @@ class PLayer(pygame.sprite.Sprite):
             if sprite.rect.colliderect(self.rect):
                 if axis == 'horizontal':
                     # * left
-                    if self.rect.left <= sprite.rect.right:
+                    if self.rect.left <= sprite.rect.right and self.old_rect.left >= sprite.old_rect.right:
                         self.rect.left = sprite.rect.right
                   
                     # * right
-                    if self.rect.right >= sprite.rect.left:
+                    if self.rect.right >= sprite.rect.left and self.old_rect.right <= sprite.old_rect.left:
                         self.rect.right = sprite.rect.left
 
                 else: 
                     pass
 
     def update(self, dt):
+        self.old_rect = self.rect.copy()
         self.input()
         self.move(dt)
