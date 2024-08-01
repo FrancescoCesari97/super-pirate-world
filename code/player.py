@@ -31,7 +31,24 @@ class PLayer(pygame.sprite.Sprite):
 
     def move(self, dt):
         self.rect.x += self.direction.x * self.speed * dt
+        self.collision('horizontal')
         self.rect.y += self.direction.y * self.speed * dt
+        self.collision('vertical')
+    
+    def collision(self, axis):
+        for sprite in self.collision_sprites:
+            if sprite.rect.colliderect(self.rect):
+                if axis == 'horizontal':
+                    # * left
+                    if self.rect.left <= sprite.rect.right:
+                        self.rect.left = sprite.rect.right
+                  
+                    # * right
+                    if self.rect.right >= sprite.rect.left:
+                        self.rect.right = sprite.rect.left
+
+                else: 
+                    pass
 
     def update(self, dt):
         self.input()
