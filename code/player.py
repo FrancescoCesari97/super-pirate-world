@@ -18,7 +18,7 @@ class PLayer(pygame.sprite.Sprite):
         self.speed = 150
         self.gravity = 1000
         self.jump = False
-        self.jump_height = 600
+        self.jump_height = 800
     
     # * collisoin
         self.collision_sprites = collision_sprites
@@ -27,7 +27,8 @@ class PLayer(pygame.sprite.Sprite):
     # * timer
 
         self.timers = {
-            'wall jump': Timer(400)
+            'wall jump': Timer(500),
+            'wall jump delay': Timer(250)
         }
 
 
@@ -59,7 +60,7 @@ class PLayer(pygame.sprite.Sprite):
     # *vertical
 
         # * slide on walls
-        if not self.on_surface['floor'] and any((self.on_surface['left'], self.on_surface['right'])):
+        if not self.on_surface['floor'] and any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall jump delay'].active:
             self.direction.y = 0
             self.rect.y += self.gravity / 10 * dt
 
@@ -71,7 +72,8 @@ class PLayer(pygame.sprite.Sprite):
         if self.jump:
             if self.on_surface['floor']:
                 self.direction.y = -self.jump_height
-            elif any((self.on_surface['left'], self.on_surface['right'])):
+                self.timers['wall jump delay'].activate()
+            elif any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall jump delay'].active:
                 self.timers['wall jump'].activate()
                 self.direction.y = -self.jump_height
                 self.direction.x = 1 if self.on_surface['left'] else - 1
