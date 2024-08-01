@@ -56,7 +56,7 @@ class PLayer(pygame.sprite.Sprite):
         if self.jump:
             if self.on_surface['floor']:
                 self.direction.y = self.jump_height
-                self.jump = False
+            self.jump = False
     
     def check_contact(self):
         floor_rect = pygame.Rect(self.rect.bottomleft, (self.rect.width, 2))
