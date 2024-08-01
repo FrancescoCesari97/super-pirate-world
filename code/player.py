@@ -16,9 +16,12 @@ class PLayer(pygame.sprite.Sprite):
         self.direction = vector()
         self.speed = 150
         self.gravity = 1000
+        self.jump = False
+        self.jump_height = -400
     
     # * collisoin
         self.collision_sprites = collision_sprites
+        self.on_surface = {'floor': False, 'left': False, 'right': False}
 
 
 
@@ -33,6 +36,12 @@ class PLayer(pygame.sprite.Sprite):
         
         self.direction.x = input_vector.normalize().x if input_vector else input_vector.x
 
+
+        if keys[pygame.K_SPACE]:
+            self.jump = True
+
+
+
     def move(self, dt):
         # * horizontal
         self.rect.x += self.direction.x * self.speed * dt
@@ -43,6 +52,19 @@ class PLayer(pygame.sprite.Sprite):
         self.rect.y += self.direction.y * dt
         self.direction.y += self.gravity / 2 * dt
         self.collision('vertical')
+
+        if self.jump:
+            if self.on_surface['floor']:
+                self.direction.y = self.jump_height
+                self.jump = False
+    
+    def check_contact(self):
+        floor_rect = pygame.Rect(self.rect.bottomleft, (self.rect.width, 2))
+        collide_rects = [sprite.rect for sprite in self.collision_sprites]
+
+        # *collision
+        self.on_surface['floor'] = True if floor_rect.collidelist(collide_rects) >= 0 else False
+   
     
     def collision(self, axis):
         for sprite in self.collision_sprites:
@@ -70,3 +92,4 @@ class PLayer(pygame.sprite.Sprite):
         self.old_rect = self.rect.copy()
         self.input()
         self.move(dt)
+        self.check_contact()
