@@ -3,7 +3,7 @@ from typing import Any
 from settings import *
 
 class PLayer(pygame.sprite.Sprite):
-    def __init__(self, pos, surf, groups):
+    def __init__(self, pos, surf, groups, collision_sprites):
         super().__init__(groups)
         self.image = pygame.Surface((48, 56))
         self.image.fill('red')
@@ -12,6 +12,10 @@ class PLayer(pygame.sprite.Sprite):
     # *movement
         self.direction = vector()
         self.speed = 150
+    
+    # * collisoin
+        self.collision_sprites = collision_sprites
+        
 
 
     def input(self):
