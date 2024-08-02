@@ -37,7 +37,7 @@ class Level:
                     end_pos = (obj.x + obj.width / 2, obj.y + obj.height)
                 speed = obj.properties['speed']
 
-                MovingSprite(self.all_sprites, start_pos, end_pos, move_dir, speed)
+                MovingSprite((self.all_sprites, self.collision_sprites), start_pos, end_pos, move_dir, speed)
                 
 
     def run(self, dt):
