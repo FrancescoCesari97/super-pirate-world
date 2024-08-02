@@ -27,7 +27,7 @@ class PLayer(pygame.sprite.Sprite):
     # * timer
 
         self.timers = {
-            'wall jump': Timer(500),
+            'wall jump': Timer(300),
             'wall jump delay': Timer(250)
         }
 
