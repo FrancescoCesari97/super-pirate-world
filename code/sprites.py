@@ -31,6 +31,14 @@ class MovingSprite(Sprite):
             if self.rect.left <= self.start_pos[0] and self.direction.x == -1:
                 self.direction.x = 1
                 self.rect.left = self.start_pos[0]
+        else:
+            if self.rect.bottom >= self.end_pos[1] and self.direction.y == 1:
+                self.direction.y = -1
+                self.rect.bottom = self.end_pos[1]
+            if self.rect.top <= self.start_pos[1] and self.direction.y == -1:
+                self.direction.y = 1
+                self.rect.top = self.start_pos[1]
+
     
     def update(self, dt):
         self.old_rect = self.rect.copy()
