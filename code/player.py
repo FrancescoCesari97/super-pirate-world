@@ -121,6 +121,8 @@ class PLayer(pygame.sprite.Sprite):
                 # * top
                     if self.rect.top <= sprite.rect.bottom and self.old_rect.top >= sprite.old_rect.bottom:
                         self.rect.top = sprite.rect.bottom
+                        if hasattr(sprite, 'moving'):
+                            self.rect.top += 6
                   
                 # * bottom
                     if self.rect.bottom >= sprite.rect.top and self.old_rect.bottom <= sprite.old_rect.top:
