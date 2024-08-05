@@ -13,7 +13,7 @@ class PLayer(pygame.sprite.Sprite):
     # * rects
         self.rect = self.image.get_frect(topleft = pos)
         self.hitbox_rect = self.rect.inflate(-76, -36)
-        self.old_rect = self.rect.copy
+        self.old_rect = self.hitbox_rect.copy
 
     # *movement
         self.direction = vector()
@@ -74,7 +74,7 @@ class PLayer(pygame.sprite.Sprite):
         # * slide on walls
         if not self.on_surface['floor'] and any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall jump delay'].active:
             self.direction.y = 0
-            self.rect.y += self.gravity / 10 * dt
+            self.hitbox_rect.y += self.gravity / 10 * dt
 
         else:
             self.direction.y += self.gravity / 2 * dt
@@ -118,7 +118,7 @@ class PLayer(pygame.sprite.Sprite):
     
     def collision(self, axis):
         for sprite in self.collision_sprites:
-            if sprite.rect.colliderect(self.rect):
+            if sprite.rect.colliderect(self.hitbox_rect):
                 if axis == 'horizontal':
                 # * left
                     if self.hitbox_rect.left <= sprite.rect.right and int(self.old_rect.left) >= sprite.old_rect.right:
@@ -155,7 +155,7 @@ class PLayer(pygame.sprite.Sprite):
             timer.update()
 
     def update(self, dt):
-        self.old_rect = self.rect.copy()
+        self.old_rect = self.hitbox_rect.copy()
         self.update_timers()
         self.input()
         self.move(dt)
