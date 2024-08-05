@@ -32,7 +32,8 @@ class PLayer(pygame.sprite.Sprite):
 
         self.timers = {
             'wall jump': Timer(300),
-            'wall jump delay': Timer(250)
+            'wall jump delay': Timer(250),
+            'platform skip': Timer(300)
         }
 
 
@@ -46,6 +47,9 @@ class PLayer(pygame.sprite.Sprite):
 
             if keys[pygame.K_a]:
                 input_vector.x -= 1
+
+            if keys[pygame.K_s]:
+                self.timers['platform skip'].activate()
             
             self.direction.x = input_vector.normalize().x if input_vector else input_vector.x
 
@@ -135,11 +139,12 @@ class PLayer(pygame.sprite.Sprite):
 
 
     def semi_collision(self):
-        for sprite in self.semi_collision_sprites:
-            if sprite.rect.colliderect(self.rect):
-                if self.rect.bottom >= sprite.rect.top and int(self.old_rect.bottom) <= sprite.old_rect.top:
-                    self.rect.bottom = sprite.rect.top
-                    self.direction.y = 0
+        if not self.timers['platform skip'].active:
+            for sprite in self.semi_collision_sprites:
+                if sprite.rect.colliderect(self.rect):
+                    if self.rect.bottom >= sprite.rect.top and int(self.old_rect.bottom) <= sprite.old_rect.top:
+                        self.rect.bottom = sprite.rect.top
+                        self.direction.y = 0
 
     def update_timers(self):
         for timer in self.timers.values():
