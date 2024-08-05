@@ -97,9 +97,9 @@ class PLayer(pygame.sprite.Sprite):
         self.rect.center = self.hitbox_rect.center
 
     def check_contact(self):
-        floor_rect = pygame.Rect(self.rect.bottomleft, (self.rect.width, 2))
-        right_rect = pygame.Rect(self.rect.topright + vector(0, self.rect.height / 4), (2, self.rect.height / 2))
-        left_rect = pygame.Rect(self.rect.topleft + vector(-2, self.rect.height / 4), (2, self.rect.height / 2))
+        floor_rect = pygame.Rect(self.hitbox_rect.bottomleft, (self.rect.width, 2))
+        right_rect = pygame.Rect(self.hitbox_rect.topright + vector(0, self.rect.height / 4), (2, self.rect.height / 2))
+        left_rect = pygame.Rect(self.hitbox_rect.topleft + vector(-2, self.rect.height / 4), (2, self.rect.height / 2))
         collide_rects = [sprite.rect for sprite in self.collision_sprites]
         semi_collide_rect = [sprite.rect for sprite in self.semi_collision_sprites]
 
