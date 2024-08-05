@@ -2,12 +2,13 @@
 from typing import Any
 from settings import *
 from timer import Timer
+from os.path import join
 
 class PLayer(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups, collision_sprites, semi_collision_sprites):
         super().__init__(groups)
-        self.image = pygame.Surface((48, 56))
-        self.image.fill('red')
+        self.image = pygame.image.load(join('.', 'graphics', 'player', 'idle', '0.png'))
+       
 
     # * rects
         self.rect = self.image.get_frect(topleft = pos)
