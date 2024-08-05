@@ -12,6 +12,7 @@ class PLayer(pygame.sprite.Sprite):
 
     # * rects
         self.rect = self.image.get_frect(topleft = pos)
+        self.hitbox_rect = self.rect.inflate(-76, -36)
         self.old_rect = self.rect.copy
 
     # *movement
@@ -65,7 +66,7 @@ class PLayer(pygame.sprite.Sprite):
 
     def move(self, dt):
     # * horizontal
-        self.rect.x += self.direction.x * self.speed * dt
+        self.hitbox_rect.x += self.direction.x * self.speed * dt
         self.collision('horizontal')
 
     # *vertical
@@ -77,14 +78,14 @@ class PLayer(pygame.sprite.Sprite):
 
         else:
             self.direction.y += self.gravity / 2 * dt
-            self.rect.y += self.direction.y * dt
+            self.hitbox_rect.y += self.direction.y * dt
             self.direction.y += self.gravity / 2 * dt
 
         if self.jump:
             if self.on_surface['floor']:
                 self.direction.y = -self.jump_height
                 self.timers['wall jump delay'].activate()
-                self.rect.bottom -= 1
+                self.hitbox_rect.bottom -= 1
             elif any((self.on_surface['left'], self.on_surface['right'])) and not self.timers['wall jump delay'].active:
                 self.timers['wall jump'].activate()
                 self.direction.y = -self.jump_height
@@ -93,6 +94,7 @@ class PLayer(pygame.sprite.Sprite):
     
         self.collision('vertical')
         self.semi_collision()
+        self.rect.center = self.hitbox_rect.center
 
     def check_contact(self):
         floor_rect = pygame.Rect(self.rect.bottomleft, (self.rect.width, 2))
@@ -119,32 +121,32 @@ class PLayer(pygame.sprite.Sprite):
             if sprite.rect.colliderect(self.rect):
                 if axis == 'horizontal':
                 # * left
-                    if self.rect.left <= sprite.rect.right and int(self.old_rect.left) >= sprite.old_rect.right:
-                        self.rect.left = sprite.rect.right
+                    if self.hitbox_rect.left <= sprite.rect.right and int(self.old_rect.left) >= sprite.old_rect.right:
+                        self.hitbox_rect.left = sprite.rect.right
                   
                 # * right
-                    if self.rect.right >= sprite.rect.left and int(self.old_rect.right) <= sprite.old_rect.left:
-                        self.rect.right = sprite.rect.left
+                    if self.hitbox_rect.right >= sprite.rect.left and int(self.old_rect.right) <= sprite.old_rect.left:
+                        self.hitbox_rect.right = sprite.rect.left
 
                 else: 
                 # * top
-                    if self.rect.top <= sprite.rect.bottom and int(self.old_rect.top) >= sprite.old_rect.bottom:
-                        self.rect.top = sprite.rect.bottom
+                    if self.hitbox_rect.top <= sprite.rect.bottom and int(self.old_rect.top) >= sprite.old_rect.bottom:
+                        self.hitbox_rect.top = sprite.rect.bottom
                         if hasattr(sprite, 'moving'):
                             self.rect.top += 6
                   
                 # * bottom
-                    if self.rect.bottom >= sprite.rect.top and int(self.old_rect.bottom) <= sprite.old_rect.top:
-                        self.rect.bottom = sprite.rect.top
+                    if self.hitbox_rect.bottom >= sprite.rect.top and int(self.old_rect.bottom) <= sprite.old_rect.top:
+                        self.hitbox_rect.bottom = sprite.rect.top
                     self.direction.y = 0
 
 
     def semi_collision(self):
         if not self.timers['platform skip'].active:
             for sprite in self.semi_collision_sprites:
-                if sprite.rect.colliderect(self.rect):
-                    if self.rect.bottom >= sprite.rect.top and int(self.old_rect.bottom) <= sprite.old_rect.top:
-                        self.rect.bottom = sprite.rect.top
+                if sprite.rect.colliderect(self.hitbox_rect):
+                    if self.hitbox_rect.bottom >= sprite.rect.top and int(self.old_rect.bottom) <= sprite.old_rect.top:
+                        self.hitbox_rect.bottom = sprite.rect.top
                         if self.direction.y > 0:
                             self.direction.y = 0
 
