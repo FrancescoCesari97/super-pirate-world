@@ -8,6 +8,7 @@ class PLayer(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups, collision_sprites, semi_collision_sprites):
         super().__init__(groups)
         self.image = pygame.image.load(join('.', 'graphics', 'player', 'idle', '0.png'))
+        self.z = Z_LAYERS['main']
        
 
     # * rects
@@ -62,7 +63,7 @@ class PLayer(pygame.sprite.Sprite):
 
     def platform_move(self, dt):
         if self.platform:
-            self.rect.topleft += self.platform.direction * self.platform.speed * dt
+            self.hitbox_rect.topleft += self.platform.direction * self.platform.speed * dt
 
     def move(self, dt):
     # * horizontal
