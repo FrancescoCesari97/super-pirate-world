@@ -5,11 +5,16 @@ from timer import Timer
 from os.path import join
 
 class PLayer(pygame.sprite.Sprite):
-    def __init__(self, pos, surf, groups, collision_sprites, semi_collision_sprites):
+    def __init__(self, pos, groups, collision_sprites, semi_collision_sprites, frames):
+
+    # * general setup
         super().__init__(groups)
-        self.image = pygame.image.load(join('.', 'graphics', 'player', 'idle', '0.png'))
         self.z = Z_LAYERS['main']
-       
+    
+    # * image
+        self.frames, self.frame_index = frames, 0
+        self.state, self.facing_right = 'idle', True
+        self.image = self.frames[self.state][self.frame_index]
 
     # * rects
         self.rect = self.image.get_frect(topleft = pos)
@@ -155,11 +160,18 @@ class PLayer(pygame.sprite.Sprite):
         for timer in self.timers.values():
             timer.update()
 
+    def animate(self, dt):
+        self.frame_index += ANIMATION_SPEED * dt
+        self.image = self.frames[self.state][int(self.frame_index % len(self.frames[self.state]))]
+
     def update(self, dt):
         self.old_rect = self.hitbox_rect.copy()
         self.update_timers()
+
         self.input()
         self.move(dt)
         self.platform_move(dt)
         self.check_contact()
+
+        self.animate(dt)
    
