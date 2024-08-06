@@ -1,4 +1,7 @@
 from typing import Any
+
+from pygame import Surface
+from settings import TILE_SIZE, Z_LAYERS
 from settings import *
 
 
@@ -10,6 +13,11 @@ class Sprite(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(topleft = pos)
         self.old_rect = self.rect.copy()
         self.z = z
+
+class AnimatedSprite(Sprite):
+    def __init__(self, pos, frames, groups, z = Z_LAYERS['main'], animation_speed = ANIMATION_SPEED):
+        self.frames, self.frames_index = frames, 0
+        super().__init__(pos, self.frames[self.frames_index], groups, z)
 
 class MovingSprite(Sprite):
     def __init__(self, groups, start_pos, end_pos, move_dir, speed):
