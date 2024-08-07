@@ -170,6 +170,11 @@ class PLayer(pygame.sprite.Sprite):
     def get_state(self):
         if self.on_surface['floor']:
             self.state = 'idle' if self.direction.x == 0 else 'run'
+        else:
+            if any(((self.on_surface['left'], self.on_surface['right']))):
+                self.state = 'wall'
+            else:
+                self.state = 'jump' if self.direction.y < 0 else 'fall'
 
     def update(self, dt):
         self.old_rect = self.hitbox_rect.copy()
