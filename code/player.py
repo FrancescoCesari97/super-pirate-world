@@ -167,6 +167,10 @@ class PLayer(pygame.sprite.Sprite):
         self.image = self.frames[self.state][int(self.frame_index % len(self.frames[self.state]))]
         self.image = self.image if self.facing_right else pygame.transform.flip(self.image, True, False)
 
+    def get_state(self):
+        if self.on_surface['floor']:
+            self.state = 'idle' if self.direction.x == 0 else 'run'
+
     def update(self, dt):
         self.old_rect = self.hitbox_rect.copy()
         self.update_timers()
@@ -176,5 +180,6 @@ class PLayer(pygame.sprite.Sprite):
         self.platform_move(dt)
         self.check_contact()
 
+        self.get_state()
         self.animate(dt)
    
