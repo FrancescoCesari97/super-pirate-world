@@ -52,9 +52,11 @@ class PLayer(pygame.sprite.Sprite):
         if not self.timers['wall jump'].active:
             if keys[pygame.K_d]:
                 input_vector.x += 1
+                self.facing_right = True 
 
             if keys[pygame.K_a]:
                 input_vector.x -= 1
+                self.facing_right = False
 
             if keys[pygame.K_s]:
                 self.timers['platform skip'].activate()
@@ -163,6 +165,7 @@ class PLayer(pygame.sprite.Sprite):
     def animate(self, dt):
         self.frame_index += ANIMATION_SPEED * dt
         self.image = self.frames[self.state][int(self.frame_index % len(self.frames[self.state]))]
+        self.image = self.image if self.facing_right else pygame.transform.flip(self.image, True, False)
 
     def update(self, dt):
         self.old_rect = self.hitbox_rect.copy()
