@@ -27,7 +27,11 @@ class Game:
             'small_chain': import_folder('.', 'graphics''level', 'small_chain'),
             'candle_light': import_folder('.', 'graphics''level', 'candle_light'),
             'small_chain': import_folder('.', 'graphics''level','small_chain'),
-            'player': import_sub_folders('.', 'graphics', 'player')
+            'player': import_sub_folders('.', 'graphics', 'player'),
+            'saw': import_folder('.', 'graphics', 'enemies','saw', 'animation'),
+            'saw_chain': import_image('.', 'graphics', 'enemies','saw', 'saw_chain'),
+            'helicopter': import_folder('.', 'graphics', 'level', 'helicopter'),
+            'boat': import_folder('.', 'graphics', 'objects', 'boat')
         }
 
     def run(self):
