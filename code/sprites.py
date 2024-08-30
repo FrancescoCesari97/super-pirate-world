@@ -3,6 +3,7 @@ from typing import Any
 from pygame import Surface
 from settings import TILE_SIZE, Z_LAYERS
 from settings import *
+from math import sin, cos, radians
 
 
 class Sprite(pygame.sprite.Sprite):
@@ -74,3 +75,21 @@ class MovingSprite(AnimatedSprite):
         if self.flip:
             self.image = pygame.transform.flip(self.image, self.reverse['x'], self.reverse['y'])
         
+
+class Spike(Sprite):
+    def __init__(self, pos, surf, groups, radius, speed, start_angle, end_angle, z = Z_LAYERS['main']):
+        self.center = pos
+        self.radius = radius
+        self.speed = speed
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.angle = self.start_angle
+
+        # * trigonometry
+        x = self.center[0] + cos(radians(self.angle)) * self.radius
+        y = self.center[1] + sin(radians(self.angle)) * self.radius
+
+        super().__init__((x, y), surf, groups, z)
+
+    def update(self, dt):
+        self.angle += self.speed * dt

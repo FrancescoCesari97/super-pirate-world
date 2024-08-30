@@ -49,7 +49,15 @@ class Level:
         # * moving objects
         for obj in tmx_map.get_layer_by_name('Moving Objects'):
             if obj.name == 'spike':
-                pass
+                Spike(
+                    pos = (obj.x + obj.width, obj.y + obj.height),
+                    surf = level_frames['spike'],
+                    radius = obj.properties['radius'],
+                    speed = obj.properties['speed'],
+                    start_angle = obj.properties['start_angle'],
+                    end_angle = obj.properties['end_angle'],
+                    groups = (self.all_sprites, self.collision_sprites),
+                )
             else:
                 frames = level_frames[obj.name]
                 groups = (self.all_sprites, self.semi_collision_sprites) if obj.properties['platform'] else (self.all_sprites)

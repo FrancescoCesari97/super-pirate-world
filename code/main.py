@@ -31,7 +31,8 @@ class Game:
             'saw': import_folder('.', 'graphics', 'enemies','saw', 'animation'),
             'saw_chain': import_image('.', 'graphics', 'enemies','saw', 'saw_chain'),
             'helicopter': import_folder('.', 'graphics', 'level', 'helicopter'),
-            'boat': import_folder('.', 'graphics', 'objects', 'boat')
+            'boat': import_folder('.', 'graphics', 'objects', 'boat'),
+            'spike': import_image('.', 'graphics', 'enemies', 'spike_ball', 'Spiked Ball'),
         }
 
     def run(self):
